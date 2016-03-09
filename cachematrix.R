@@ -21,26 +21,31 @@
 ## - get_inverse     get the cached value of the inverse of the matrix
 
 makeCacheMatrix <- function(x = matrix()) {
-        cache <- NULL
-        set_matrix <- function(y) {
-                x <<- y
-                cache <<- NULL
+        cache <- NULL ## initialize cache to NULL. It holds the value of the matrix inverse
+
+        ## Stores the value of the matrix in the parent environment
+        set_matrix <- function(new_value) {
+                x <<- new_value
+                cache <<- NULL ## flushed the cache to NULL when there's a new matrix
         }
+        ## Returns the value of the stored matrix
         get_matrix <- function() {
                 x
         }
+        ## Stores the value of the matrix inverse in the parent environment 
         cache_inverse <- function(solve) {
                 cache <<- solve
         }
+        ## Gets the cached value of the matrix inverse
         get_inverse <- function() {
                 cache
         }
-        
+        ## Returns a list with each named element of the list being function
+        ## that is referred to with the $ operator
         list(set_matrix = set_matrix, get_matrix = get_matrix,
              cache_inverse = cache_inverse,
              get_inverse = get_inverse)
 }
-
 
 ## Write a short comment describing this function
 
@@ -53,15 +58,19 @@ makeCacheMatrix <- function(x = matrix()) {
 
 cacheSolve <- function(x, ...) {
         ## Return a matrix that is the inverse of 'x'
+        ## Check if a cached value of the inverse exists
         inverse <- x$get_inverse()
+        ## if the cached value exists then it is returned
         if(!is.null(inverse)) {
                 message("getting cached data")
                 return(inverse)
         }
+        ## If there is no value in cache, get the matrix, calculate the inverse
+        ## store it in cache
         data <- x$get_matrix()
         cache <- solve(data, ...)
         x$cache_inverse(cache)
-        cache
+        cache ## return the value of the matrix inverse in the cache
 }
 
 ## The following are two test cases for testing the above two functions
